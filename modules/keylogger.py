@@ -9,6 +9,9 @@ kernel32 = windll.kernel32
 psapi    = windll.psapi
 current_window = None
 
+log = open('log.txt','w')
+
+
 def get_current_process():
 
     # get a handle to the foreground window
@@ -33,8 +36,6 @@ def get_current_process():
 
     # print out the header if we're in the right process
     
-    log = open('log.txt','w')
-
     print >> log
     print >> log , "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
     print >> log
