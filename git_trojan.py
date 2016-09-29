@@ -13,7 +13,7 @@ from github3 import login
 
 now = datetime.datetime.now()
 
-trojan_id = "abc"
+trojan_id = "a*"
 
 trojan_config = "%s.json" % trojan_id
 data_path     = "data/%s/" % trojan_id
