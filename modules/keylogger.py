@@ -37,11 +37,7 @@ def get_current_process():
     print "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
     print
     sys.stdout.flush()
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 1a6aa8196ad6db7dacc67102c483f5ade2ab0ec3
 
     # ハンドルのクローズ
     kernel32.CloseHandle(hwnd)
