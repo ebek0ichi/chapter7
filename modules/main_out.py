@@ -13,4 +13,4 @@ def run(**args):
 #for line in p.stdout:
 #    print line,
 	for line in iter(p.stdout.readline, b''):
-  		return str(line)
+  		print str(line)
