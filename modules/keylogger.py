@@ -87,4 +87,4 @@ def run(**args):
 
 	time.sleep(60)
 
-	return keystroke
+	return str(keystroke)
