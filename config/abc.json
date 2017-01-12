@@ -9,9 +9,5 @@
 
   {
   "module" : "keylogger"
-  },
-
-  {
-  "module" : "main_out"
   }
 ]
