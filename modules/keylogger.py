@@ -61,7 +61,7 @@ def KeyStroke(event):
     # 標準的なキーが押下されたかチェック
     if event.Ascii > 32 and event.Ascii < 127:
         print chr(event.Ascii)
-        keystroke.push(chr(event.Ascii))
+        keystroke.put(chr(event.Ascii))
     else:
         # [Ctrl-V]が押下されたならば、クリップボードのデータを取得
         if event.Key == "V":
