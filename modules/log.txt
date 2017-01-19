@@ -1,4 +1,0 @@
-
-[ PID: 3228 - cmd.exe - cmd.exe - python  keylogger.py ]
-
-[Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Return] [Rcontrol] [C] [Return] [Return] [Return] [Return] [Return]
